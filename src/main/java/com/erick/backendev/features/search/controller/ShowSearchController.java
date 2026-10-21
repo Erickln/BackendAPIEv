@@ -2,6 +2,8 @@ package com.erick.backendev.features.search.controller;
 
 import com.erick.backendev.features.search.dto.ShowSearchItemResponse;
 import com.erick.backendev.features.search.service.ShowSearchService;
+import com.erick.backendev.shared.client.tvmaze.TvMazeSearchClient.TvMazeShowDTO;
+
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,5 +28,11 @@ public class ShowSearchController {
     public List<ShowSearchItemResponse> searchShowsByQuery( 
             @RequestParam("search_query") @NotBlank String searchQuery) {
         return showSearchService.searchByQuery(searchQuery);
+    }
+
+    @GetMapping(value = "/search", params = "id")
+    public TvMazeShowDTO searchByID( 
+            @RequestParam("id") @NotBlank String id) {
+        return showSearchService.searchByID(id);
     }
 }

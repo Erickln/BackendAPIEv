@@ -3,6 +3,7 @@ package com.erick.backendev.features.search.service;
 import com.erick.backendev.features.search.dto.ShowSearchItemResponse;
 import com.erick.backendev.shared.client.tvmaze.TvMazeSearchClient;
 import com.erick.backendev.shared.client.tvmaze.TvMazeSearchClient.TvMazeSearchResult;
+import com.erick.backendev.shared.client.tvmaze.TvMazeSearchClient.TvMazeShowDTO;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -20,20 +21,32 @@ public class ShowSearchService {
 		this.tvMazeSearchClient = tvMazeSearchClient;
 	}
 
-	public List<ShowSearchItemResponse> searchByQuery(String searchQuery) {
-		return tvMazeSearchClient.searchShowsByQuery(searchQuery).stream()
-				.map(TvMazeSearchResult::show)
-				.filter(Objects::nonNull)
-				.map(show -> new ShowSearchItemResponse(
-						show.id(),
-						show.name(),
-						resolveChannel(show.network(), show.webChannel(), show.id()),
-						show.summary(),
-						show.genres()
-				))
-				.toList();
-	}
+    public List<ShowSearchItemResponse> searchByQuery(String searchQuery) {
+        return mapToResponseList(tvMazeSearchClient.searchShowsByQuery(searchQuery));
+    }
 
+    public TvMazeShowDTO searchByID(String id) {
+        TvMazeShowDTO clientResult = tvMazeSearchClient.searchShowsByID(id);
+        if (clientResult == null) {
+            throw new IllegalArgumentException("No show found with ID: " + id);
+        }
+        return clientResult;
+    }
+
+    private List<ShowSearchItemResponse> mapToResponseList(List<TvMazeSearchResult> searchResults) {
+        return searchResults.stream()
+                .map(TvMazeSearchResult::show)
+                .filter(Objects::nonNull)
+                .map(show -> new ShowSearchItemResponse(
+                        show.id(),
+                        show.name(),
+                        resolveChannel(show.network(), show.webChannel(), show.id()),
+                        show.summary(),
+                        show.genres()
+                ))
+                .toList();
+    }
+    
 	private String resolveChannel(TvMazeSearchClient.TvMazeChannel network,
 							  TvMazeSearchClient.TvMazeChannel webChannel,
                               Long id) {
