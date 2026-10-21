@@ -1,5 +1,9 @@
 # BackendAPIEv
 
+## WARNING
+
+.env is included because this repository is private. Avoid sharing it with anyone outside of the Pinwox team. 
+
 ## Backend Technical Assessment
 
 Develop a Java middleware API that integrates with the [TVmaze API](https://www.tvmaze.com/api) and provides show search, show details, MongoDB caching, and user comments and ratings.
