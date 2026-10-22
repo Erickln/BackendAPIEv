@@ -1,5 +1,6 @@
 package com.erick.backendev.features.search.service;
 
+import com.erick.backendev.features.search.dto.ShowCommentResponse;
 import com.erick.backendev.features.search.dto.ShowSearchResultResponseLITE;
 import com.erick.backendev.persistence.mongo.document.ShowCacheDocument;
 import com.erick.backendev.persistence.mongo.document.WriteRatingsAndCommentsDocument;
@@ -76,10 +77,17 @@ public class ShowSearchService {
                         show.name(),
                         resolveChannel(show.network(), show.webChannel(), show.id()),
                         show.summary(),
-                        show.genres()
+                        show.genres(),
+                        loadCommentsForShow(show.id())
                 ))
                 .toList();
 
+    }
+
+    private List<ShowCommentResponse> loadCommentsForShow(Long showId) {
+        return writeRatingsAndCommentsRepository.findByShowId(showId).stream()
+                .map(document -> new ShowCommentResponse(document.getComment(), document.getRating()))
+                .toList();
     }
     
     /**

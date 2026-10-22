@@ -7,6 +7,7 @@ public record ShowSearchResultResponseLITE(
 		String name,
 		String channel,
 		String summary,
-		List<String> genres
+		List<String> genres,
+		List<ShowCommentResponse> comments
 ) {
 }
