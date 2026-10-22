@@ -1,6 +1,7 @@
 package com.erick.backendev.shared.exception;
 
 import com.erick.backendev.shared.client.tvmaze.TvMazeSearchClient;
+import com.erick.backendev.shared.client.tvmaze.TvMazeShowClient;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -14,6 +15,17 @@ public class ApiExceptionHandler {
 	@ExceptionHandler(TvMazeSearchClient.TvMazeClientException.class)
 	@ResponseStatus(HttpStatus.BAD_GATEWAY)
 	public ProblemDetail handleTvMazeClientException(TvMazeSearchClient.TvMazeClientException ex) {
+		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+				HttpStatus.BAD_GATEWAY,
+				ex.getMessage()
+		);
+		problemDetail.setTitle("Upstream API error");
+		return problemDetail;
+	}
+
+	@ExceptionHandler(TvMazeShowClient.TvMazeClientException.class)
+	@ResponseStatus(HttpStatus.BAD_GATEWAY)
+	public ProblemDetail handleShowClientException(TvMazeShowClient.TvMazeClientException ex) {
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
 				HttpStatus.BAD_GATEWAY,
 				ex.getMessage()
