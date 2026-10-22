@@ -14,6 +14,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,12 +45,12 @@ public class ShowSearchService {
         Optional<ShowCacheDocument> cached = showCacheRepository.findById(cacheKey);
         if (cached.isPresent()) {
             System.out.println("Returning cached show for ID: " + showId);
-            return cached.get().getPayload();
+            return attachComments(new HashMap<>(cached.get().getPayload()), showId);
         }
 
         Map<String, Object> fetchedShow = tvMazeShowClient.getShow(showId);
         showCacheRepository.save(new ShowCacheDocument(cacheKey, fetchedShow));
-        return fetchedShow;
+        return attachComments(new HashMap<>(fetchedShow), showId);
     }
 
     public HttpStatus saveRatingAndComment(Long showId, String comment, Integer rating) {
@@ -88,6 +89,19 @@ public class ShowSearchService {
         return writeRatingsAndCommentsRepository.findByShowId(showId).stream()
                 .map(document -> new ShowCommentResponse(document.getComment(), document.getRating()))
                 .toList();
+    }
+
+    private Map<String, Object> attachComments(Map<String, Object> show, Long showId) {
+        List<Map<String, Object>> comments = writeRatingsAndCommentsRepository.findByShowId(showId).stream()
+                .map(document -> {
+                    Map<String, Object> comment = new HashMap<>();
+                    comment.put("comment", document.getComment());
+                    comment.put("rating", document.getRating());
+                    return comment;
+                })
+                .toList();
+        show.put("comments", comments);
+        return show;
     }
     
     /**

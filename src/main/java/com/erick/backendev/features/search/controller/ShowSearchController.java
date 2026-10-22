@@ -53,7 +53,7 @@ public class ShowSearchController {
             @RequestParam("comment") String comment,
             @RequestParam("rating") Integer rating) {
 
-        if (showId == null || rating == null || rating < 1 || rating > 10) {
+        if (showId == null || rating == null || rating < 1 || rating > 5) {
             return ResponseEntity.badRequest().build();
         }
 
