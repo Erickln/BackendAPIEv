@@ -10,12 +10,12 @@ import lombok.Setter;
 import java.util.Map;
 
 @Setter
-@Getter  
-@Document(collection = "shows")
+@Getter
+@Document(collection = "tvmaze_cache")
 public class ShowCacheDocument {
 
 	@Id
-	private Long id;
+	private String id;
 
 	@Field("payload")
 	private Map<String, Object> payload;
@@ -23,7 +23,7 @@ public class ShowCacheDocument {
 	public ShowCacheDocument() {
 	}
 
-	public ShowCacheDocument(Long id, Map<String, Object> payload) {
+	public ShowCacheDocument(String id, Map<String, Object> payload) {
 		this.id = id;
 		this.payload = payload;
 	}
