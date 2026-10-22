@@ -71,7 +71,7 @@ public class ShowSearchService {
             return List.of();
         }
         return searchResults.stream()
-                .map(TvMazeSearchResult::show)
+                .map(result -> result == null ? null : result.show())
                 .filter(Objects::nonNull)
                 .map(show -> new ShowSearchResultResponseLITE(
                         show.id(),
@@ -86,13 +86,13 @@ public class ShowSearchService {
     }
 
     private List<ShowCommentResponse> loadCommentsForShow(Long showId) {
-        return writeRatingsAndCommentsRepository.findByShowId(showId).stream()
+        return findCommentsByShowId(showId).stream()
                 .map(document -> new ShowCommentResponse(document.getComment(), document.getRating()))
                 .toList();
     }
 
     private Map<String, Object> attachComments(Map<String, Object> show, Long showId) {
-        List<Map<String, Object>> comments = writeRatingsAndCommentsRepository.findByShowId(showId).stream()
+        List<Map<String, Object>> comments = findCommentsByShowId(showId).stream()
                 .map(document -> {
                     Map<String, Object> comment = new HashMap<>();
                     comment.put("comment", document.getComment());
@@ -102,6 +102,13 @@ public class ShowSearchService {
                 .toList();
         show.put("comments", comments);
         return show;
+    }
+
+    private List<WriteRatingsAndCommentsDocument> findCommentsByShowId(Long showId) {
+        if (writeRatingsAndCommentsRepository == null) {
+            return List.of();
+        }
+        return writeRatingsAndCommentsRepository.findByShowId(showId);
     }
     
     /**

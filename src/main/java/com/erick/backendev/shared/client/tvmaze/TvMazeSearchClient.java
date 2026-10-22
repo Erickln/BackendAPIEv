@@ -1,12 +1,7 @@
 package com.erick.backendev.shared.client.tvmaze;
 
-import com.erick.backendev.shared.client.tvmaze.TvMazeSearchClient.TvMazeChannel;
-import com.erick.backendev.shared.client.tvmaze.TvMazeSearchClient.TvMazeClientException;
-import com.erick.backendev.shared.client.tvmaze.TvMazeSearchClient.TvMazeSearchResult;
-import com.erick.backendev.shared.client.tvmaze.TvMazeSearchClient.TvMazeShowDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
